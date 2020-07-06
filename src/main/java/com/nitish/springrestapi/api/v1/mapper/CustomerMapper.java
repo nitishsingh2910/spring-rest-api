@@ -11,4 +11,6 @@ public interface CustomerMapper {
 
 //    @Mapping(target = "id", ignore = true)
     CustomerDTO customerToCustomerDTO(Customer customer);
+
+    Customer customerDTOToCustomer(CustomerDTO customerDTO);
 }

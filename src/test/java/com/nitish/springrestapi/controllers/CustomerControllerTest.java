@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class CustomerControllerTest {
+class CustomerControllerTest extends AbstractRestControllerTest {
 
     @Mock
     CustomerService customerService;
@@ -74,5 +74,28 @@ class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo("Michale")));
+    }
+
+    @Test
+    public void createNewCustomer() throws Exception {
+        //given
+        CustomerDTO customer = new CustomerDTO();
+        customer.setFirstName("Fred");
+        customer.setLastName("Flintstone");
+
+        CustomerDTO returnDTO = new CustomerDTO();
+        returnDTO.setFirstName(customer.getFirstName());
+        returnDTO.setLastName(customer.getLastName());
+        returnDTO.setCustomerUrl("/api/v1/customers/1");
+
+        when(customerService.createNewCustomer(customer)).thenReturn(returnDTO);
+
+        //when/then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/customers/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customer)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName", equalTo("Fred")))
+                .andExpect(jsonPath("$.customerUrl", equalTo("/api/v1/customers/1")));
     }
 }
