@@ -31,4 +31,5 @@ public class CategoryController {
         return new ResponseEntity<CategoryDTO>(
                 categoryService.getCategoryByName(name), HttpStatus.OK);
     }
+
 }
